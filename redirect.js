@@ -3,40 +3,42 @@ class TS3Redirector {
         this.retryCount = 0;
         this.maxRetries = 3;
         this.redirectDelay = 1500;
+        this.handleUrlParams();
         this.init();
     }
 
+    handleUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('username');
+        if (username) {
+            SERVER_CONFIG.nickname = username;
+        }
+    }
+
     init() {
-        // Validate configuration
         if (!this.validateConfig()) {
             return;
         }
 
-        // Build TS3 URL
         this.tsUrl = this.buildTS3Url();
-        
-        // Update UI elements
         this.updateUI();
-        
-        // Start redirect process
         this.startRedirect();
     }
 
     validateConfig() {
         if (!SERVER_CONFIG || !SERVER_CONFIG.address) {
-            this.showError('Błąd konfiguracji: Brak adresu serwera');
+            this.showError('Configuration Error: Missing server address');
             return false;
         }
 
         if (SERVER_CONFIG.address === 'YOURSERVER_ADDRESS') {
-            this.showError('Błąd konfiguracji: Adres serwera nie został skonfigurowany');
+            this.showError('Configuration Error: Server address not configured');
             return false;
         }
 
-        // Basic validation for server address
         const addressPattern = /^[a-zA-Z0-9.-]+$/;
         if (!addressPattern.test(SERVER_CONFIG.address)) {
-            this.showError('Błąd konfiguracji: Nieprawidłowy format adresu serwera');
+            this.showError('Configuration Error: Invalid server address format');
             return false;
         }
 
@@ -45,7 +47,7 @@ class TS3Redirector {
 
     buildTS3Url() {
         let url = `ts3server://${SERVER_CONFIG.address}`;
-        
+
         if (SERVER_CONFIG.port && SERVER_CONFIG.port !== 9987) {
             url += `:${SERVER_CONFIG.port}`;
         }
@@ -64,13 +66,11 @@ class TS3Redirector {
     }
 
     updateUI() {
-        // Update manual link
         const manualLink = document.getElementById('manual-link');
         if (manualLink) {
             manualLink.href = this.tsUrl;
         }
 
-        // Show connection details
         this.showConnectionDetails();
     }
 
@@ -78,15 +78,15 @@ class TS3Redirector {
         const detailsEl = document.getElementById('connection-details');
         if (detailsEl) {
             const details = [
-                `<strong>Serwer:</strong> ${SERVER_CONFIG.address}`,
+                `<strong>Server:</strong> ${SERVER_CONFIG.address}`,
                 `<strong>Port:</strong> ${SERVER_CONFIG.port || 9987}`,
             ];
 
             if (SERVER_CONFIG.channelId) {
-                details.push(`<strong>Kanał:</strong> ${SERVER_CONFIG.channelId}`);
+                details.push(`<strong>Channel:</strong> ${SERVER_CONFIG.channelId}`);
             }
             if (SERVER_CONFIG.nickname) {
-                details.push(`<strong>Nick:</strong> ${SERVER_CONFIG.nickname}`);
+                details.push(`<strong>Nickname:</strong> ${SERVER_CONFIG.nickname}`);
             }
 
             detailsEl.innerHTML = details.join('<br>');
@@ -95,7 +95,7 @@ class TS3Redirector {
     }
 
     startRedirect() {
-        this.updateStatus('Przygotowywanie połączenia...');
+        this.updateStatus('Preparing connection...');
         this.animateProgress();
 
         setTimeout(() => {
@@ -104,16 +104,15 @@ class TS3Redirector {
     }
 
     attemptRedirect() {
-        this.updateStatus('Łączenie z serwerem TeamSpeak...');
-        
+        this.updateStatus('Connecting to TeamSpeak server...');
+
         try {
             window.location.href = this.tsUrl;
-            
-            // Show fallback after attempt
+
             setTimeout(() => {
                 this.showFallback();
             }, 2000);
-            
+
         } catch (error) {
             console.error('Redirect error:', error);
             this.handleRedirectError();
@@ -121,7 +120,7 @@ class TS3Redirector {
     }
 
     showFallback() {
-        this.updateStatus('Jeśli TeamSpeak się nie otworzył, użyj przycisku poniżej:');
+        this.updateStatus('If TeamSpeak didn\'t open, use the button below:');
         document.getElementById('fallback-text').style.display = 'block';
         document.getElementById('manual-link').style.display = 'inline-block';
         document.getElementById('troubleshooting').style.display = 'block';
@@ -129,12 +128,12 @@ class TS3Redirector {
 
     handleRedirectError() {
         this.retryCount++;
-        
+
         if (this.retryCount < this.maxRetries) {
-            this.updateStatus(`Ponawiam próbę... (${this.retryCount}/${this.maxRetries})`);
+            this.updateStatus(`Retrying... (${this.retryCount}/${this.maxRetries})`);
             setTimeout(() => this.attemptRedirect(), 2000);
         } else {
-            this.showError('Nie udało się automatycznie otworzyć TeamSpeak');
+            this.showError('Failed to automatically open TeamSpeak');
             this.showFallback();
         }
     }
@@ -159,16 +158,14 @@ class TS3Redirector {
     }
 }
 
-// Start when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new TS3Redirector();
 });
 
-// Handle visibility change (user returned to tab)
 document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
         const statusEl = document.getElementById('status');
-        if (statusEl && statusEl.textContent.includes('Łączenie')) {
+        if (statusEl && (statusEl.textContent.includes('Connecting') || statusEl.textContent.includes('Łączenie'))) {
             setTimeout(() => {
                 new TS3Redirector().showFallback();
             }, 1000);

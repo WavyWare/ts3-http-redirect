@@ -1,41 +1,41 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Automatyczne przekierowanie do serwera TeamSpeak 3">
-    <title>Przekierowanie do TeamSpeak</title>
+    <meta name="description" content="Automatic redirection to TeamSpeak 3 server">
+    <title>TeamSpeak Redirect</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
 </head>
 <body>
     <div class="container">
         <div class="logo">🎧</div>
-        <h1>Przekierowanie do TeamSpeak</h1>
-        <div class="status" id="status">Sprawdzanie ustawień...</div>
+        <h1>TeamSpeak Redirect</h1>
+        <div class="status" id="status">Checking settings...</div>
         <div class="progress-bar">
             <div class="progress" id="progress"></div>
         </div>
         <p id="fallback-text" style="display: none;">
-            Jeśli nie zostałeś automatycznie przekierowany:
+            If you weren't automatically redirected:
         </p>
         <div class="button-container">
             <a href="#" id="manual-link" class="ts-button" style="display: none;">
-                Dołącz do serwera TeamSpeak
+                Join TeamSpeak Server
             </a>
         </div>
         <div class="info" id="info" style="display: none;">
             <details>
-                <summary>Informacje o połączeniu</summary>
+                <summary>Connection Information</summary>
                 <div id="connection-details"></div>
             </details>
         </div>
         <div class="troubleshooting" style="display: none;" id="troubleshooting">
-            <h3>Rozwiązywanie problemów</h3>
+            <h3>Troubleshooting</h3>
             <ul>
-                <li>Upewnij się, że masz zainstalowany klient TeamSpeak 3</li>
-                <li>Sprawdź czy twoja przeglądarka obsługuje protokół ts3server://</li>
-                <li>Sprawdź ustawienia bezpieczeństwa przeglądarki</li>
+                <li>Ensure TeamSpeak 3 client is installed</li>
+                <li>Check if your browser supports the ts3server:// protocol</li>
+                <li>Check browser security settings</li>
             </ul>
         </div>
     </div>

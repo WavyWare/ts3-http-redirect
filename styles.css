@@ -162,7 +162,6 @@ h1 {
     top: 8px;
 }
 
-/* Mobile responsiveness */
 @media (max-width: 768px) {
     .container {
         padding: 30px 20px;
@@ -197,7 +196,6 @@ h1 {
     }
 }
 
-/* Dark mode support */
 @media (prefers-color-scheme: light) {
     body {
         background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
@@ -226,7 +224,6 @@ h1 {
     }
 }
 
-/* Accessibility improvements */
 @media (prefers-reduced-motion: reduce) {
     .logo {
         animation: none;
@@ -241,7 +238,6 @@ h1 {
     }
 }
 
-/* High contrast mode */
 @media (prefers-contrast: high) {
     .container {
         border: 3px solid;
